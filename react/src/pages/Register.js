@@ -1,56 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { useAuthStore } from "../store/auth";
 import { useNavigate } from "react-router-dom";
-import { register } from "../utils/auth";
 
 function Register() {
-  const [first_name, setFirstName] = useState("");
-  const [last_name, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isLoggedIn()) {
-      navigate("/");
-    }
-  }, [isLoggedIn, navigate]);
-
-  const resetForm = () => {
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { error } = await register(first_name, last_name, email, password);
-    if (error) {
-      alert(JSON.stringify(error));
-    } else {
-      navigate("/");
-      resetForm();
-    }
-  };
-
   return (
     <div>
       <Header />
       <div className="relative flex flex-col justify-center overflow-hidden">
         <div className="w-full p-6 m-auto bg-white rounded-md shadow-md sm:max-w-lg">
           <h1 className="text-4xl font-bold text-center mb-5">Sign up</h1>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4">
             <div className="form-control w-full">
               <label className="label">First Name</label>
               <input
                 required
                 type="text"
                 name="first_name"
-                value={first_name}
-                onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Enter First Name"
                 className="input input-bordered w-full"
               />
@@ -64,8 +29,6 @@ function Register() {
                 required
                 type="text"
                 name="last_name"
-                value={last_name}
-                onChange={(e) => setLastName(e.target.value)}
                 placeholder="Enter Last Name"
                 className="input input-bordered w-full"
               />
@@ -79,8 +42,6 @@ function Register() {
                 required
                 type="email"
                 name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
                 className="input input-bordered w-full"
               />
@@ -94,8 +55,6 @@ function Register() {
                 required
                 type="password"
                 name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
                 className="input input-bordered w-full"
                 minLength={6}

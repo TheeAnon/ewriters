@@ -84,6 +84,13 @@ DATABASES = {
     }
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.ewriters.co.ke'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'admin@ewriters.co.ke'
+EMAIL_HOST_PASSWORD = 'K3mb0!J@pheth'
+EMAIL_USE_TLS = True
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -123,7 +130,39 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'react/build/static')
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {
+        'user_create': 'backend.serializers.UserCreateSerializer',
+        'user': 'backend.serializers.UserCreateSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    }
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'backend.Users'

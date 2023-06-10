@@ -1,27 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Header from "../components/Header";
-import { useAuthStore } from "../store/auth";
 
 function Home() {
-  const [isLoggedIn, user] = useAuthStore((state) => [
-    state.isLoggedIn,
-    state.user,
-  ]);
-  return (
-    <div>{isLoggedIn() ? <Dashboard user={user()} /> : <LandingPage />}</div>
-  );
-}
-
-const Dashboard = ({ user }) => {
-  return (
-    <Link to="/logout">
-      <button>Logout</button>
-    </Link>
-  );
-};
-
-const LandingPage = () => {
   return (
     <div>
       <Header />
@@ -57,6 +37,6 @@ const LandingPage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Home;

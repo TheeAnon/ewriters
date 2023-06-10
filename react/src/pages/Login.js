@@ -1,45 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/auth";
-import { login } from "../utils/auth";
+import { login } from "../actions/auth";
 
-function Login() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [remember_me, setRemember] = useState("");
-  const [password, setPassword] = useState("");
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+function Login({ login }) {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  useEffect(() => {
-    if (isLoggedIn()) {
-      navigate("/");
-    }
-  }, [isLoggedIn, navigate]);
+  const { email, password } = formData;
 
-  const resetForm = () => {
-    setEmail("");
-    setRemember("unchecked");
-    setPassword("");
-  };
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleLogin = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    const { error } = await login(email, password);
-    if (error) {
-      alert(error);
-    } else {
-      navigate("/");
-      resetForm();
-    }
+    login(email, password);
   };
+
   return (
     <div>
       <Header />
       <div className="relative flex flex-col justify-center overflow-hidden mt-3">
         <div className="w-full p-6 m-auto bg-white rounded-md shadow-md sm:max-w-lg">
           <h1 className="text-4xl font-bold text-center mb-5">Login</h1>
-          <form className="space-y-4" onSubmit={handleLogin}>
+          <form className="space-y-4" onSubmit={(e) => onSubmit(e)}>
             <div className="form-control w-full ">
               <label className="label">Email</label>
               <input
@@ -47,7 +32,7 @@ function Login() {
                 type="email"
                 name="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => onChange(e)}
                 placeholder="Email address"
                 className="input input-bordered w-full"
               />
@@ -62,7 +47,7 @@ function Login() {
                 type="password"
                 name="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => onChange(e)}
                 placeholder="Enter password"
                 className="input input-bordered w-full"
                 minLength={6}
@@ -77,8 +62,6 @@ function Login() {
                 <input
                   type="checkbox"
                   name="remember_me"
-                  value={remember_me}
-                  onChange={(e) => setRemember(e.target.value)}
                   checked="checked"
                   className="checkbox"
                 />
@@ -86,7 +69,7 @@ function Login() {
             </div>
             <div>
               <a
-                href="/forgot-password"
+                href="/reset-password"
                 className="text-sm text-gray-600 hover:underline hover:text-blue-600"
               >
                 Forgot password?
@@ -112,4 +95,6 @@ function Login() {
   );
 }
 
-export default Login;
+const mapStateToProps = (state) => ({});
+
+export default connect(null, { login })(Login);

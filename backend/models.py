@@ -23,7 +23,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)
-    phone = models.PhoneNumberField()
+    phone = models.IntegerField()
     is_active = models.BooleanField(default=False)
 
     objects = UserAccountManager()
