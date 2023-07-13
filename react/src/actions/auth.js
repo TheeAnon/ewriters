@@ -4,6 +4,8 @@ import {
   USER_LOADED_SUCCESS,
   USER_LOADED_FAIL,
 } from "./types";
+import axios from "axios";
+import res from "react";
 
 export const load_user = (email, password) => async (dispatch) => {
   if (localStorage.getItem("access")) {

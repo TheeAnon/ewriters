@@ -6,38 +6,47 @@ function Register() {
   return (
     <div>
       <Header />
-      <div className="relative flex flex-col justify-center overflow-hidden">
-        <div className="w-full p-6 m-auto bg-white rounded-md shadow-md sm:max-w-lg">
-          <h1 className="text-4xl font-bold text-center mb-5">Sign up</h1>
-          <form className="space-y-4">
+      <div className="relative flex flex-col justify-center overflow-hidden p-4">
+        <div className="w-full p-6 m-auto bg-white rounded-md sm:max-w-lg">
+          <div className="flex flex-col mb-2">
+            <div className="flex p-0">
+              <a
+                href="/login"
+                className="btn btn-md rounded-none btn-ghost normal-case text-2xl font-bold text-center flex-1 hover:bg-white text-rose-500"
+              >
+                Login
+              </a>
+              <a
+                href
+                className="btn btn-md btn-ghost normal-case text-2xl font-bold text-center flex-1 hover:bg-white"
+              >
+                Sign up
+              </a>
+            </div>
+            <div className="w-full">
+              <progress className="progress w-1/2 float-right" value={50} />
+            </div>
+          </div>
+          <form className="space-y-4 pt-10">
             <div className="form-control w-full">
-              <label className="label">First Name</label>
               <input
                 required
                 type="text"
-                name="first_name"
-                placeholder="Enter First Name"
+                name="name"
+                placeholder="Full Name"
                 className="input input-bordered w-full"
               />
-              <label className="label-text-alt text-red-500 hidden">
-                Error
-              </label>
             </div>
             <div className="form-control w-full">
-              <label className="label">Last Name</label>
               <input
                 required
                 type="text"
-                name="last_name"
-                placeholder="Enter Last Name"
+                name="phone"
+                placeholder="Phone Number"
                 className="input input-bordered w-full"
               />
-              <label className="label-text-alt text-red-500 hidden">
-                Error
-              </label>
             </div>
             <div className="form-control w-full ">
-              <label className="label">Email</label>
               <input
                 required
                 type="email"
@@ -45,39 +54,31 @@ function Register() {
                 placeholder="Email address"
                 className="input input-bordered w-full"
               />
-              <label className="label-text-alt text-red-500 hidden">
-                Error
-              </label>
             </div>
             <div className="form-control w-full">
-              <label className="label">Password</label>
               <input
                 required
                 type="password"
                 name="password"
-                placeholder="Enter password"
+                placeholder="Password"
                 className="input input-bordered w-full"
                 minLength={6}
               />
-              <label className="label-text-alt">
-                Atleast 6 characters long
-              </label>
-              <label className="label-text-alt text-red-500 hidden">
-                Error
-              </label>
+            </div>
+            <div className="form-control w-full">
+              <input
+                required
+                type="password"
+                name="re_password"
+                placeholder="Confirm password"
+                className="input input-bordered w-full"
+                minLength={6}
+              />
             </div>
             <div>
-              <button className="btn" type="submit">
+              <button className="mt-4 btn w-full text-lg" type="submit">
                 Register
               </button>
-            </div>
-            <div>
-              <a
-                href="/login"
-                className="text-sm text-gray-600 hover:underline hover:text-blue-600"
-              >
-                Already have an account? Login
-              </a>
             </div>
           </form>
         </div>

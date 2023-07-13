@@ -24,7 +24,6 @@ class Users(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)
     phone = models.IntegerField()
-    is_active = models.BooleanField(default=False)
 
     objects = UserAccountManager()
 

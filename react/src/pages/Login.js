@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import { login } from "../actions/auth";
+import { connect } from "react-redux";
 
 function Login({ login }) {
   const [formData, setFormData] = useState({
@@ -8,40 +9,51 @@ function Login({ login }) {
     password: "",
   });
 
-  const { email, password } = formData;
+  const { email, password, remember_me } = formData;
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = (e) => {
     e.preventDefault();
-    login(email, password);
+    login(email, password, remember_me);
   };
 
   return (
     <div>
       <Header />
-      <div className="relative flex flex-col justify-center overflow-hidden mt-3">
-        <div className="w-full p-6 m-auto bg-white rounded-md shadow-md sm:max-w-lg">
-          <h1 className="text-4xl font-bold text-center mb-5">Login</h1>
-          <form className="space-y-4" onSubmit={(e) => onSubmit(e)}>
+      <div className="relative flex flex-col justify-center overflow-hidden p-4">
+        <div className="w-full p-6 m-auto bg-white rounded-md sm:max-w-lg">
+          <div className="flex flex-col mb-2">
+            <div className="flex p-0">
+              <a
+                href
+                className="btn btn-md rounded-none btn-ghost normal-case text-2xl font-bold text-center flex-1 hover:bg-white"
+              >
+                Login
+              </a>
+              <a
+                href="/register"
+                className="btn btn-md btn-ghost normal-case text-2xl font-bold text-center flex-1 text-rose-500 hover:bg-white"
+              >
+                Sign up
+              </a>
+            </div>
+            <progress className="progress w-1/2" value={50} />
+          </div>
+          <form className="space-y-4 pt-10" onSubmit={(e) => onSubmit(e)}>
             <div className="form-control w-full ">
-              <label className="label">Email</label>
               <input
                 required
                 type="email"
                 name="email"
                 value={email}
                 onChange={(e) => onChange(e)}
-                placeholder="Email address"
+                placeholder="Email address or Phone number"
                 className="input input-bordered w-full"
               />
-              <label className="label-text-alt text-red-500 hidden">
-                Error
-              </label>
             </div>
             <div className="form-control w-full">
-              <label className="label">Password</label>
               <input
                 required
                 type="password"
@@ -52,41 +64,33 @@ function Login({ login }) {
                 className="input input-bordered w-full"
                 minLength={6}
               />
-              <label className="label-text-alt text-red-500 hidden">
-                Error
-              </label>
             </div>
-            <div className="w-1/2">
-              <label className="label cursor-pointer">
-                <span className="label-text">Remember me</span>
-                <input
-                  type="checkbox"
-                  name="remember_me"
-                  checked="checked"
-                  className="checkbox"
-                />
-              </label>
+            <div className="flex">
+              <div className="flex flex-1">
+                <label className="label cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="remember_me"
+                    onChange={(e) => onChange(e)}
+                    value={remember_me}
+                    className="checkbox mr-4"
+                  />
+                  <span className="label-text">Remember me</span>
+                </label>
+              </div>
+              <span>
+                <a
+                  href="/reset-password"
+                  className="text-sm text-gray-600 hover:underline hover:text-blue-600"
+                >
+                  Forgot password?
+                </a>
+              </span>
             </div>
             <div>
-              <a
-                href="/reset-password"
-                className="text-sm text-gray-600 hover:underline hover:text-blue-600"
-              >
-                Forgot password?
-              </a>
-            </div>
-            <div>
-              <button className="btn" type="submit">
+              <button className="btn w-full text-lg" type="submit">
                 Login
               </button>
-            </div>
-            <div>
-              <a
-                href="/register"
-                className="text-sm text-gray-600 hover:underline hover:text-blue-600"
-              >
-                Don't have an account? Sign up
-              </a>
             </div>
           </form>
         </div>
