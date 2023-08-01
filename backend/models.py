@@ -4,40 +4,45 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name, phone, password):
+    def create_user(self, email, name, phone, password):
         if not email:
             raise ValueError("Email address cannot be blank")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, first_name=first_name,
-                          last_name=last_name, phone=phone)
+        user = self.model(email=email, name=name, phone=phone)
         user.set_password(password)
         user.save()
 
-    def create_admin(self, email):
+        return user
+
+    def create_superuser(self, email, name, phone, password):
         if not email:
             raise ValueError("Email address cannot be blank")
+
+        email = self.normalize_email(email)
+        user = self.model(email=email, name=name, phone=phone,
+                          is_staff=True, is_superuser=True)
+        user.set_password(password)
+        user.save()
+
+        return user
 
 
 class Users(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=25)
-    last_name = models.CharField(max_length=25)
+    name = models.CharField(max_length=30)
     phone = models.IntegerField()
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     objects = UserAccountManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone']
+    REQUIRED_FIELDS = ['name', 'phone']
 
-    def get_first_name(self):
-        return self.first_name
-
-    def get_last_name(self):
-        return self.last_name
-
-    def get_full_name(self):
-        return self.first_name+' '+self.last_name
+    def get_name(self):
+        return self.name
 
     def get_phone(self):
         return self.phone

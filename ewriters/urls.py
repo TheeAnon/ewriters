@@ -1,8 +1,10 @@
+from django.contrib import admin
 from django.views.generic import TemplateView
 from django.urls import path, re_path, include
 from .views import *
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
 ]

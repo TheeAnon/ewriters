@@ -15,7 +15,7 @@ function Home() {
               Work with the best to get the best. We help you get where you
               want. Forget rules, sign up today.
             </p>
-            <a href="/register" className="btn">
+            <a href="/signup" className="btn">
               Get started
             </a>
           </div>

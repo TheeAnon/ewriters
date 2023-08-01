@@ -1,16 +1,26 @@
-import React from "react";
+import React, { Fragment } from "react";
 import defaultAvatar from "../images/avatar.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { icon } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { connect } from "react-redux";
+import { logout } from "../actions/auth";
 
-function Header() {
-  return (
-    <div className="navbar bg-base-100">
-      <div className="navbar-start">
-        <a href="/" className="btn btn-ghost normal-case text-xl">
-          eWriters
+const Header = ({ logout, isAuthenticated }) => {
+  const guestLinks = () => (
+    <Fragment>
+      <div className="navbar-end">
+        <a href="/login" className="btn btn-md btn-ghost normal-case text-xl">
+          Login
+        </a>
+        <a href="/signup" className="btn btn-sm md:btn-md">
+          Sign up
         </a>
       </div>
+    </Fragment>
+  );
+
+  const authLinks = () => (
+    <Fragment>
       <div className="navbar-center hidden lg:flex">
         <input
           type="text"
@@ -19,12 +29,6 @@ function Header() {
         />
       </div>
       <div className="navbar-end">
-        <a href="/login" className="btn btn-md btn-ghost normal-case text-xl">
-          Login
-        </a>
-        <a href="/register" className="btn btn-sm md:btn-md">
-          Get started
-        </a>
         <button className="btn btn-ghost btn-circle lg:hidden">
           <FontAwesomeIcon icon={icon({ name: "search" })} size="lg" />
         </button>
@@ -51,7 +55,7 @@ function Header() {
               </a>
             </li>
             <li>
-              <a href="/logout">
+              <a href onClick={logout}>
                 <FontAwesomeIcon
                   icon={icon({ name: "arrow-right" })}
                   size="lg"
@@ -62,8 +66,22 @@ function Header() {
           </ul>
         </div>
       </div>
+    </Fragment>
+  );
+  return (
+    <div className="navbar bg-base-100">
+      <div className="navbar-start">
+        <a href="/" className="btn btn-ghost normal-case text-xl">
+          eWriters
+        </a>
+      </div>
+      {isAuthenticated ? authLinks() : guestLinks()}
     </div>
   );
-}
+};
 
-export default Header;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { logout })(Header);

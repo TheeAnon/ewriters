@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -85,11 +86,12 @@ DATABASES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.ewriters.co.ke'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'admin@ewriters.co.ke'
-EMAIL_HOST_PASSWORD = 'K3mb0!J@pheth'
-EMAIL_USE_TLS = True
+EMAIL_HOST = 'mail.ewriters.co.ke'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'info@ewriters.co.ke'
+EMAIL_HOST_PASSWORD = 'K3mb0!J@ph3th'
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
 
 
 # Password validation
@@ -141,6 +143,8 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME':timedelta(days=30),
 }
 
 DJOSER = {

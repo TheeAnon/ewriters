@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { login } from "../actions/auth";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-function Login({ login }) {
+function Login({ login, isAuthenticated }) {
+  const error = useSelector((state) => state.error);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,9 +18,15 @@ function Login({ login }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    login(email, password, remember_me);
+    login(email, password);
   };
 
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
   return (
     <div>
       <Header />
@@ -33,7 +41,7 @@ function Login({ login }) {
                 Login
               </a>
               <a
-                href="/register"
+                href="/signup"
                 className="btn btn-md btn-ghost normal-case text-2xl font-bold text-center flex-1 text-rose-500 hover:bg-white"
               >
                 Sign up
@@ -41,13 +49,18 @@ function Login({ login }) {
             </div>
             <progress className="progress w-1/2" value={50} />
           </div>
-          <form className="space-y-4 pt-10" onSubmit={(e) => onSubmit(e)}>
+          <form
+            autoComplete="off"
+            className="space-y-4 pt-10"
+            onSubmit={(e) => onSubmit(e)}
+          >
             <div className="form-control w-full ">
               <input
                 required
                 type="email"
                 name="email"
                 value={email}
+                autoComplete="off"
                 onChange={(e) => onChange(e)}
                 placeholder="Email address or Phone number"
                 className="input input-bordered w-full"
@@ -65,6 +78,7 @@ function Login({ login }) {
                 minLength={6}
               />
             </div>
+            <label className="label-text-alt text-red-500">{error}</label>
             <div className="flex">
               <div className="flex flex-1">
                 <label className="label cursor-pointer">
@@ -99,6 +113,8 @@ function Login({ login }) {
   );
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
 
-export default connect(null, { login })(Login);
+export default connect(mapStateToProps, { login })(Login);
