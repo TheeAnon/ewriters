@@ -23,7 +23,7 @@ function Home() {
       </div>
 
       <div className="hero">
-        <div className="hero-content text-start">
+        <div className="hero-content">
           <h1 className="text-3xl font-bold">
             An excellent opportunity for your freelancing career.
           </h1>
@@ -31,7 +31,7 @@ function Home() {
       </div>
 
       <div className="hero">
-        <div className="hero-content text-start">
+        <div className="hero-content">
           <h1 className="text-2xl font-bold">Create a free account</h1>
         </div>
       </div>

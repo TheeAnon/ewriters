@@ -4,23 +4,23 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self, email, name, phone, password):
+    def create_user(self, email,  phone, password, **exta_fields):
         if not email:
             raise ValueError("Email address cannot be blank")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name, phone=phone)
+        user = self.model(email=email, **exta_fields, phone=phone)
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, email, name, phone, password):
+    def create_superuser(self, email, phone, password, **exta_fields):
         if not email:
             raise ValueError("Email address cannot be blank")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name, phone=phone,
+        user = self.model(email=email, **exta_fields, phone=phone,
                           is_staff=True, is_superuser=True)
         user.set_password(password)
         user.save()
@@ -30,7 +30,8 @@ class UserAccountManager(BaseUserManager):
 
 class Users(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
     phone = models.IntegerField()
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -39,10 +40,10 @@ class Users(AbstractBaseUser, PermissionsMixin):
     objects = UserAccountManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'phone']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone']
 
     def get_name(self):
-        return self.name
+        return self.first_name
 
     def get_phone(self):
         return self.phone

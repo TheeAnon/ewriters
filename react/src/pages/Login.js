@@ -3,13 +3,25 @@ import Header from "../components/Header";
 import { login } from "../actions/auth";
 import { connect, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import googleLogo from "../images/google.png";
+import axios from "axios";
 
 function Login({ login, isAuthenticated }) {
-  const error = useSelector((state) => state.error);
+  const error = useSelector((state) => state.auth.error);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const continueWithGoogle = async () => {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=http://127.0.0.1:8000`
+      )
+      .then((res) => {
+        window.location.replace(res.data.authorization_url);
+      });
+  };
 
   const { email, password, remember_me } = formData;
 
@@ -51,7 +63,7 @@ function Login({ login, isAuthenticated }) {
           </div>
           <form
             autoComplete="off"
-            className="space-y-4 pt-10"
+            className="space-y-4 pt-10 pb-5"
             onSubmit={(e) => onSubmit(e)}
           >
             <div className="form-control w-full ">
@@ -78,7 +90,9 @@ function Login({ login, isAuthenticated }) {
                 minLength={6}
               />
             </div>
-            <label className="label-text-alt text-red-500">{error}</label>
+            {error && (
+              <label className="label-text-alt text-red-500">{error}</label>
+            )}
             <div className="flex">
               <div className="flex flex-1">
                 <label className="label cursor-pointer">
@@ -107,6 +121,21 @@ function Login({ login, isAuthenticated }) {
               </button>
             </div>
           </form>
+          <div className="divider">OR CONTINUE WITH</div>
+          <div className="flex flex-row space-x-2 w-full justify-center mt-3">
+            <button
+              className="btn btn-square btn-outline p-1"
+              onClick={continueWithGoogle}
+            >
+              <img src={googleLogo} alt="google" />
+            </button>
+            <button
+              className="btn btn-square btn-outline p-1"
+              onClick={continueWithGoogle}
+            >
+              <img src={googleLogo} alt="google" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

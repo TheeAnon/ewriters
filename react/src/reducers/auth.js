@@ -13,6 +13,8 @@ import {
   SIGNUP_SUCCESS,
   ACTIVATION_FAIL,
   ACTIVATION_SUCCESS,
+  GOOGLE_AUTH_FAIL,
+  GOOGLE_AUTH_SUCCESS,
   LOGOUT,
 } from "../actions/types";
 
@@ -39,6 +41,7 @@ export default function Auth(state = initialState, action) {
         isAuthenticated: true,
         access: payload.access,
         refresh: payload.refresh,
+        error: null,
       };
 
     case SIGNUP_SUCCESS:
@@ -47,6 +50,17 @@ export default function Auth(state = initialState, action) {
         isAuthenticated: true,
         access: payload.access,
         refresh: payload.refresh,
+        error: null,
+      };
+
+    case GOOGLE_AUTH_SUCCESS:
+      localStorage.setItem("access", payload.access);
+      return {
+        ...state,
+        isAuthenticated: true,
+        access: payload.access,
+        refresh: payload.refresh,
+        error: null,
       };
 
     case USER_LOADED_SUCCESS:
@@ -65,7 +79,38 @@ export default function Auth(state = initialState, action) {
         user: null,
       };
     case LOGIN_FAIL:
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      return {
+        ...state,
+        isAuthenticated: false,
+        access: null,
+        refresh: null,
+        user: null,
+        error: payload.error,
+      };
     case SIGNUP_FAIL:
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      return {
+        ...state,
+        isAuthenticated: false,
+        access: null,
+        refresh: null,
+        user: null,
+        error: payload.error,
+      };
+    case GOOGLE_AUTH_FAIL:
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      return {
+        ...state,
+        isAuthenticated: false,
+        access: null,
+        refresh: null,
+        user: null,
+        error: payload.error,
+      };
     case LOGOUT:
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");

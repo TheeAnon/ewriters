@@ -40,11 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'djoser',
     'backend',
+    'social_django',
 ]
 
 MIDDLEWARE = [
+    'social_django.middleware.SocialAuthExceptionMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,6 +71,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -89,9 +95,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.ewriters.co.ke'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'info@ewriters.co.ke'
-EMAIL_HOST_PASSWORD = 'K3mb0!J@ph3th'
+EMAIL_HOST_PASSWORD = 'J@ph3thK3mb0!'
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
+EMAIL_DEBUG = True
 
 
 # Password validation
@@ -141,10 +148,19 @@ REST_FRAMEWORK = {
     ),
 }
 
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME':timedelta(days=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'AUTH_TOKEN_CLASSES': (
+        'rest_framework_simplejwt.token.AccessToken',
+    )
 }
 
 DJOSER = {
@@ -152,21 +168,27 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'SEND_CONFIRMATION_EMAIL': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
         'user_create': 'backend.serializers.UserCreateSerializer',
         'user': 'backend.serializers.UserCreateSerializer',
+        'current_user': 'account.serializers.UserCreateSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     }
 }
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '648218136367-p3oumi54i91mlsacmfo92th8f8ufjmtr.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'openid',
+]
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'backend.Users'

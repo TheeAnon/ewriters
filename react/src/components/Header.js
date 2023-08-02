@@ -9,7 +9,7 @@ const Header = ({ logout, isAuthenticated }) => {
   const guestLinks = () => (
     <Fragment>
       <div className="navbar-end">
-        <a href="/login" className="btn btn-md btn-ghost normal-case text-xl">
+        <a href="/login" className="btn btn-sm btn-ghost md:btn-md mr-1">
           Login
         </a>
         <a href="/signup" className="btn btn-sm md:btn-md">

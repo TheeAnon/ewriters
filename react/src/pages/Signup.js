@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import { signup } from "../actions/auth";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 function Signup({ signup, isAuthenticated }) {
+  const error = useSelector((state) => state.auth.error);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [nameErr, setNameErr] = useState("");
   const [phoneErr, setPhoneErr] = useState("");
@@ -25,6 +26,7 @@ function Signup({ signup, isAuthenticated }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
+
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{6,}$/;
@@ -33,16 +35,13 @@ function Signup({ signup, isAuthenticated }) {
     } else if (phone.trim().length < 9 || phone.trim().length > 12) {
       setPhoneErr("Please enter a valid phone number.");
     } else if (emailRegex.test(email.trim())) {
-      if (phone.trim().length < 11) {
-        setPhoneNumber("254" + phone.trim().replace(/^0+/, ""));
-        console.log(phoneNumber);
-      } else {
-        setPhoneNumber("254" + phone.trim().replace(/^0+/, ""));
-        console.log(phoneNumber);
-      }
+      phone.trim().length < 11
+        ? setPhoneNumber("254" + phone.trim().replace(/^0+/, ""))
+        : setPhoneNumber("254" + phone.trim().replace(/^0+/, ""));
+
       if (passwordRegex.test(password)) {
         if (password === re_password) {
-          signup(name, phoneNumber, email, password, re_password);
+          signup(email, name, phoneNumber, password, re_password);
           setPassErr("");
         } else {
           setPassErr("Your passwords do not match");
@@ -87,7 +86,7 @@ function Signup({ signup, isAuthenticated }) {
           </div>
           <form
             autoComplete="off"
-            className="space-y-4 pt-10"
+            className="space-y-4 pt-10 pb-5"
             onSubmit={(e) => onSubmit(e)}
           >
             <div className="form-control w-full">
@@ -157,13 +156,16 @@ function Signup({ signup, isAuthenticated }) {
               />
               <label className="label-text-alt text-red-500">{passErr}</label>
             </div>
-            <label className="label-text-alt text-red-500">error</label>
+            {error && (
+              <label className="label-text-alt text-red-500">{error}</label>
+            )}
             <div>
               <button className="mt-4 btn w-full text-lg" type="submit">
                 Signup
               </button>
             </div>
           </form>
+          <div className="divider">OR CONTINUE WITH</div>
         </div>
       </div>
     </div>

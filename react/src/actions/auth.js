@@ -14,6 +14,7 @@ import {
   SIGNUP_FAIL,
   ACTIVATION_SUCCESS,
   ACTIVATION_FAIL,
+  GOOGLE_AUTH_SUCCESS,
 } from "./types";
 import axios from "axios";
 
@@ -80,6 +81,41 @@ export const load_user = () => async (dispatch) => {
   }
 };
 
+export const googleAuth = (state, code) => async (dispatch) => {
+  if (state && code && !localStorage.getItem("access")) {
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    };
+    const details = { state: state, code: code };
+    const body = Object.keys(details)
+      .map(
+        (key) =>
+          encodeURIComponent(key) + "=" + encodeURIComponent(details[key])
+      )
+      .join("6");
+    await axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?${body}`,
+        config
+      )
+      .then((res) => {
+        dispatch({
+          type: GOOGLE_AUTH_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(load_user());
+      })
+      .catch((error) => {
+        dispatch({
+          type: LOGIN_FAIL,
+          payload: { error: error },
+        });
+      });
+  }
+};
+
 export const login = (email, password) => async (dispatch) => {
   const config = {
     headers: {
@@ -99,40 +135,54 @@ export const login = (email, password) => async (dispatch) => {
       dispatch(load_user());
     })
     .catch((error) => {
+      const err =
+        error.response.status === 401
+          ? "Wrong email or password. If you don't have an account sign up instead."
+          : "An error occured. Please try again.";
       dispatch({
         type: LOGIN_FAIL,
-        error: error.response.data.detail,
+        payload: { error: err },
       });
     });
 };
 
 export const signup =
-  (name, phone, email, password, re_password) => async (dispatch) => {
+  (email, first_name, last_name, phone, password, re_password) =>
+  async (dispatch) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
 
-    const body = JSON.stringify({ email, name, phone, password, re_password });
+    const body = JSON.stringify({
+      email,
+      first_name,
+      last_name,
+      phone,
+      password,
+      re_password,
+    });
 
     await axios
       .post(`${process.env.REACT_APP_API_URL}/auth/users/`, body, config)
-      .then(() => {
+      .then((response) => {
         dispatch({
           type: SIGNUP_SUCCESS,
+          payload: response.data,
         });
+        dispatch(load_user());
       })
       .catch((error) => {
-        console.log(error);
-        if (error.response && error.response.status === 400) {
-          console.log("You already have an account. Login instead.");
-        } else {
-          console.log("An error occurred:", error.message);
-        }
+        const err =
+          error.response.data.email && error.response.data.email.length > 0
+            ? "You already have an account. Login instead."
+            : "An error occured. Please try again.";
         dispatch({
           type: SIGNUP_FAIL,
+          payload: { error: err },
         });
+        console.log(error);
       });
   };
 
