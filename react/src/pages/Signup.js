@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import { signup } from "../actions/auth";
 import { connect, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import googleLogo from "../images/google.png";
 
 function Signup({ signup, isAuthenticated }) {
   const error = useSelector((state) => state.auth.error);
@@ -21,6 +23,12 @@ function Signup({ signup, isAuthenticated }) {
 
   const { name, phone, email, password, re_password } = formData;
 
+  const toTitleCase = (str) => {
+    return str.replace(/\b\w+/g, (txt) => {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  };
+
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -32,28 +40,48 @@ function Signup({ signup, isAuthenticated }) {
     const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{6,}$/;
     if (!name.trim().includes(" ") || name.length < 4) {
       setNameErr("Please enter your full name.");
-    } else if (phone.trim().length < 9 || phone.trim().length > 12) {
-      setPhoneErr("Please enter a valid phone number.");
-    } else if (emailRegex.test(email.trim())) {
-      phone.trim().length < 11
-        ? setPhoneNumber("254" + phone.trim().replace(/^0+/, ""))
-        : setPhoneNumber("254" + phone.trim().replace(/^0+/, ""));
+    } else {
+      const [first_name, ...last_name] = name.trim().split(" ");
+      if (phone.trim().length < 9 || phone.trim().length > 12) {
+        setPhoneErr("Please enter a valid phone number.");
+      } else if (emailRegex.test(email.trim())) {
+        phone.trim().length < 11
+          ? setPhoneNumber("254" + phone.trim().replace(/^0+/, ""))
+          : setPhoneNumber("254" + phone.trim().replace(/^0+/, ""));
 
-      if (passwordRegex.test(password)) {
-        if (password === re_password) {
-          signup(email, name, phoneNumber, password, re_password);
-          setPassErr("");
+        if (passwordRegex.test(password)) {
+          if (password === re_password) {
+            signup(
+              email,
+              phoneNumber,
+              password,
+              re_password,
+              toTitleCase(first_name),
+              toTitleCase(last_name)
+            );
+            setPassErr("");
+          } else {
+            setPassErr("Your passwords do not match");
+          }
         } else {
-          setPassErr("Your passwords do not match");
+          setPassErr(
+            "Password must be at least 6 characters long and contain at least one number and one uppercase letter."
+          );
         }
       } else {
-        setPassErr(
-          "Password must be at least 6 characters long and contain at least one number and one uppercase letter."
-        );
+        setEmailErr("Please enter a valid email address.");
       }
-    } else {
-      setEmailErr("Please enter a valid email address.");
     }
+  };
+
+  const continueWithGoogle = async () => {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=http://127.0.0.1:8000`
+      )
+      .then((res) => {
+        window.location.replace(res.data.authorization_url);
+      });
   };
 
   const navigate = useNavigate();
@@ -166,6 +194,20 @@ function Signup({ signup, isAuthenticated }) {
             </div>
           </form>
           <div className="divider">OR CONTINUE WITH</div>
+          <div className="flex flex-row space-x-2 w-full justify-center mt-3">
+            <button
+              className="btn btn-square btn-outline p-1"
+              onClick={continueWithGoogle}
+            >
+              <img src={googleLogo} alt="google" />
+            </button>
+            <button
+              className="btn btn-square btn-outline p-1"
+              onClick={continueWithGoogle}
+            >
+              <img src={googleLogo} alt="google" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

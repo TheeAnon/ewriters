@@ -147,7 +147,7 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 export const signup =
-  (email, first_name, last_name, phone, password, re_password) =>
+  (email, phone, password, re_password, first_name, last_name) =>
   async (dispatch) => {
     const config = {
       headers: {
@@ -157,11 +157,11 @@ export const signup =
 
     const body = JSON.stringify({
       email,
-      first_name,
-      last_name,
       phone,
       password,
       re_password,
+      first_name,
+      last_name,
     });
 
     await axios

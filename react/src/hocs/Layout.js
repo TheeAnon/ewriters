@@ -18,7 +18,7 @@ const Layout = (props) => {
       props.checkAuthenticated();
       props.load_user();
     }
-  }, [location, props]);
+  }, [location]);
 
   return <div>{props.children}</div>;
 };

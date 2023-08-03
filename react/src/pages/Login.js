@@ -13,16 +13,6 @@ function Login({ login, isAuthenticated }) {
     password: "",
   });
 
-  const continueWithGoogle = async () => {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=http://127.0.0.1:8000`
-      )
-      .then((res) => {
-        window.location.replace(res.data.authorization_url);
-      });
-  };
-
   const { email, password, remember_me } = formData;
 
   const onChange = (e) =>
@@ -33,6 +23,15 @@ function Login({ login, isAuthenticated }) {
     login(email, password);
   };
 
+  const continueWithGoogle = async () => {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=http://127.0.0.1:8000`
+      )
+      .then((res) => {
+        window.location.replace(res.data.authorization_url);
+      });
+  };
   const navigate = useNavigate();
   useEffect(() => {
     if (isAuthenticated) {

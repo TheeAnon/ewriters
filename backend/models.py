@@ -9,7 +9,7 @@ class UserAccountManager(BaseUserManager):
             raise ValueError("Email address cannot be blank")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, **exta_fields, phone=phone)
+        user = self.model(email=email, phone=phone, **exta_fields)
         user.set_password(password)
         user.save()
 
@@ -20,7 +20,7 @@ class UserAccountManager(BaseUserManager):
             raise ValueError("Email address cannot be blank")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, **exta_fields, phone=phone,
+        user = self.model(email=email, phone=phone, **exta_fields,
                           is_staff=True, is_superuser=True)
         user.set_password(password)
         user.save()
