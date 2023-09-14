@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Header from "../components/Header";
 import { signup } from "../actions/auth";
 import { connect, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -90,7 +89,13 @@ function Signup({ signup, isAuthenticated }) {
   }
   return (
     <div>
-      <Header />
+      <div className="navbar bg-base-100">
+        <div className="navbar-start">
+          <a href="/" className="btn btn-ghost normal-case text-xl">
+            eWriters
+          </a>
+        </div>
+      </div>
       <div className="relative flex flex-col justify-center overflow-hidden p-4">
         <div className="w-full p-6 m-auto bg-white rounded-md sm:max-w-lg">
           <div className="flex flex-col mb-2">
@@ -194,18 +199,13 @@ function Signup({ signup, isAuthenticated }) {
             </div>
           </form>
           <div className="divider">OR CONTINUE WITH</div>
-          <div className="flex flex-row space-x-2 w-full justify-center mt-3">
+          <div className="space-x-2 w-full justify-center pt-3">
             <button
-              className="btn btn-square btn-outline p-1"
+              className="btn btn-square btn-outline p-1 w-full space-x-1"
               onClick={continueWithGoogle}
             >
-              <img src={googleLogo} alt="google" />
-            </button>
-            <button
-              className="btn btn-square btn-outline p-1"
-              onClick={continueWithGoogle}
-            >
-              <img src={googleLogo} alt="google" />
+              <img src={googleLogo} alt="google" width={20} height={20} />
+              <span>CONTINUE WITH GOOGLE</span>
             </button>
           </div>
         </div>

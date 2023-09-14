@@ -4,23 +4,23 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self, email,  phone, password, **exta_fields):
+    def create_user(self, email,  password=None, **exta_fields):
         if not email:
             raise ValueError("Email address cannot be blank")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, phone=phone, **exta_fields)
+        user = self.model(email=email, **exta_fields)
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, email, phone, password, **exta_fields):
+    def create_superuser(self, email, password=None, **exta_fields):
         if not email:
             raise ValueError("Email address cannot be blank")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, phone=phone, **exta_fields,
+        user = self.model(email=email,**exta_fields,
                           is_staff=True, is_superuser=True)
         user.set_password(password)
         user.save()

@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import Layout from "./hocs/Layout";
+import About from "./pages/About";
 
 const App = () => (
   <Provider store={store}>
@@ -29,6 +30,7 @@ const App = () => (
           <Route exact path="/verify" element={<Verify />} />
           <Route exact path="/chat" element={<Chat />} />
           <Route exact path="/chats" element={<Chats />} />
+          <Route exact path="/about" element={<About />} />
         </Routes>
       </Layout>
     </Router>

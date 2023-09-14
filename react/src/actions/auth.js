@@ -94,7 +94,7 @@ export const googleAuth = (state, code) => async (dispatch) => {
         (key) =>
           encodeURIComponent(key) + "=" + encodeURIComponent(details[key])
       )
-      .join("6");
+      .join("&");
     await axios
       .post(
         `${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?${body}`,

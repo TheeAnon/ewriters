@@ -1,21 +1,20 @@
 import React, { useState } from "react";
-import { redirect } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { verify } from "../actions/auth";
 import { connect } from "react-redux";
 
-function VerifyEmail({ verify, match }) {
+function VerifyEmail({ verify }) {
   const [verified, setVerified] = useState(false);
+  const navigate = useNavigate();
+  const [uid, token] = useParams();
 
   const verifyAccount = (e) => {
-    const uid = match.params.uid;
-    const token = match.params.token;
-
     verify(uid, token);
     setVerified(true);
   };
 
   if (verified) {
-    redirect("/");
+    navigate("/", { replace: true });
   }
   return (
     <div>
